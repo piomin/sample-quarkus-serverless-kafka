@@ -17,7 +17,7 @@ import java.time.Duration;
 @Slf4j
 public class OrderPublisher {
 
-    private static int num = 0;
+    private static long num = 0;
 
     @Inject
     private OrderRepository repository;
@@ -29,7 +29,7 @@ public class OrderPublisher {
     public Multi<Order> orderEventsPublish() {
         return Multi.createFrom().ticks().every(Duration.ofSeconds(1))
                 .map(tick -> {
-                    Order o = new Order(++num, num%10+1, num%10+1, 100, 1, OrderStatus.NEW);
+                    Order o = new Order(++num, (int) num%10+1, (int) num%10+1, 100, 1, OrderStatus.NEW);
                     try {
                         transaction.begin();
                         repository.persist(o);

@@ -33,15 +33,19 @@ public class OrderReserveFunction {
         Customer customer = repository.findById(order.getCustomerId());
         log.info("Customer: {}", customer);
         if (order.getStatus() == OrderStatus.NEW) {
-            customer.setAmountReserved(customer.getAmountReserved() + order.getAmount());
-            customer.setAmountAvailable(customer.getAmountAvailable() - order.getAmount());
-            order.setStatus(OrderStatus.IN_PROGRESS);
+            if (order.getAmount() < customer.getAmountAvailable()) {
+                order.setStatus(OrderStatus.IN_PROGRESS);
+                customer.setAmountReserved(customer.getAmountReserved() + order.getAmount());
+                customer.setAmountAvailable(customer.getAmountAvailable() - order.getAmount());
+                repository.persist(customer);
+            } else {
+                order.setStatus(OrderStatus.REJECTED);
+            }
             log.info("Order reserved: {}", order);
-//            publisher.send(order);
             orderEmitter.send(order);
         } else if (order.getStatus() == OrderStatus.CONFIRMED) {
             customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
+            repository.persist(customer);
         }
-        repository.persist(customer);
     }
 }
