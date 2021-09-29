@@ -9,4 +9,5 @@ public class Order {
     private int productsCount;
     private OrderStatus status;
     private String source;
+    private String rejectedService;
 }

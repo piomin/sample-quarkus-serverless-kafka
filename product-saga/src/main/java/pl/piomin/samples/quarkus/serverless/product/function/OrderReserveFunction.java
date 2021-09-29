@@ -25,7 +25,10 @@ public class OrderReserveFunction {
     @Funq
     public void reserve(Order order) {
         log.infof("Received order: %s", order);
-        doReserve(order);
+        if (order.getStatus() == OrderStatus.NEW)
+            doReserve(order);
+        else
+            doConfirm(order);
     }
 
     private void doReserve(Order order) {
@@ -42,9 +45,18 @@ public class OrderReserveFunction {
             }
             log.infof("Order reserved: %s", order);
             orderEmitter.send(order);
-        } else if (order.getStatus() == OrderStatus.CONFIRMED) {
-            product.setReservedItems(product.getReservedItems() - order.getProductsCount());
-            repository.persist(product);
         }
+    }
+
+    private void doConfirm(Order order) {
+        Product product = repository.findById(order.getProductId());
+        log.infof("Product: %s", product);
+        if (order.getStatus() == OrderStatus.CONFIRMED) {
+            product.setReservedItems(product.getReservedItems() - order.getProductsCount());
+        } else if (order.getStatus() == OrderStatus.ROLLBACK) {
+            product.setReservedItems(product.getReservedItems() - order.getProductsCount());
+            product.setAvailableItems(product.getAvailableItems() + order.getProductsCount());
+        }
+        repository.persist(product);
     }
 }
