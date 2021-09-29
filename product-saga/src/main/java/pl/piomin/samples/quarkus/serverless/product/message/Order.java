@@ -8,4 +8,5 @@ public class Order {
     private Long productId;
     private int productsCount;
     private OrderStatus status;
+    private String source;
 }

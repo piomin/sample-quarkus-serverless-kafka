@@ -27,13 +27,19 @@ public class OrderConfirmFunction {
     private void doConfirm(Order o) {
         Order order = repository.findById(o.getId());
         if (order.getStatus() == OrderStatus.NEW) {
-            order.setStatus(OrderStatus.IN_PROGRESS);
+            order.setStatus(o.getStatus());
+            if (o.getStatus() == OrderStatus.REJECTED)
+                order.setRejectedService(o.getSource());
         } else if (order.getStatus() == OrderStatus.IN_PROGRESS) {
-            order.setStatus(OrderStatus.CONFIRMED);
+            if (o.getStatus() == OrderStatus.REJECTED)
+                order.setStatus(OrderStatus.ROLLBACK);
+            else
+                order.setStatus(OrderStatus.CONFIRMED);
             log.infof("Order confirmed: %s", order);
             publisher.send(order);
         } else if (order.getStatus() == OrderStatus.REJECTED) {
-            order.setStatus(OrderStatus.REJECTED);
+            order.setStatus(OrderStatus.ROLLBACK);
+            order.setRejectedService(o.getSource());
             log.infof("Order rejected: %s", order);
             publisher.send(order);
         }

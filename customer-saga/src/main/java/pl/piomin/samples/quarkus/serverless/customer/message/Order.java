@@ -8,4 +8,6 @@ public class Order {
     private Long customerId;
     private int amount;
     private OrderStatus status;
+    private String source;
+    private String rejectedService;
 }

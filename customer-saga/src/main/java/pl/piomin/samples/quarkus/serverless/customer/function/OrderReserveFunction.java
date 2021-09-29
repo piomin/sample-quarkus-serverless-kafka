@@ -1,51 +1,59 @@
 package pl.piomin.samples.quarkus.serverless.customer.function;
 
 import io.quarkus.funqy.Funq;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
-import pl.piomin.samples.quarkus.serverless.customer.service.OrderReservePublisher;
 
 import javax.inject.Inject;
 
-@Slf4j
 public class OrderReserveFunction {
 
     @Inject
-    private CustomerRepository repository;
+    private Logger log;
     @Inject
-    private OrderReservePublisher publisher;
+    private CustomerRepository repository;
     @Inject
     @Channel("reserve-events")
     Emitter<Order> orderEmitter;
 
     @Funq
     public void reserve(Order order) {
-        log.info("Received order: {}", order);
-        doReserve(order);
+        log.infof("Received order: %s", order);
+        if (order.getStatus() == OrderStatus.NEW)
+            doReserve(order);
+        else
+            doConfirm(order);
     }
 
     private void doReserve(Order order) {
         Customer customer = repository.findById(order.getCustomerId());
-        log.info("Customer: {}", customer);
-        if (order.getStatus() == OrderStatus.NEW) {
-            if (order.getAmount() < customer.getAmountAvailable()) {
-                order.setStatus(OrderStatus.IN_PROGRESS);
-                customer.setAmountReserved(customer.getAmountReserved() + order.getAmount());
-                customer.setAmountAvailable(customer.getAmountAvailable() - order.getAmount());
-                repository.persist(customer);
-            } else {
-                order.setStatus(OrderStatus.REJECTED);
-            }
-            log.info("Order reserved: {}", order);
-            orderEmitter.send(order);
-        } else if (order.getStatus() == OrderStatus.CONFIRMED) {
-            customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
+        log.infof("Customer: %s", customer);
+        if (order.getAmount() < customer.getAmountAvailable()) {
+            order.setStatus(OrderStatus.IN_PROGRESS);
+            customer.setAmountReserved(customer.getAmountReserved() + order.getAmount());
+            customer.setAmountAvailable(customer.getAmountAvailable() - order.getAmount());
             repository.persist(customer);
+        } else {
+            order.setStatus(OrderStatus.REJECTED);
         }
+        log.infof("Order reserved: %s", order);
+        orderEmitter.send(order);
+    }
+
+    private void doConfirm(Order order) {
+        Customer customer = repository.findById(order.getCustomerId());
+        log.infof("Customer: %s", customer);
+        if (order.getStatus() == OrderStatus.CONFIRMED) {
+            customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
+        } else if (order.getStatus() == OrderStatus.ROLLBACK) {
+            customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
+            customer.setAmountAvailable(customer.getAmountAvailable() + order.getAmount());
+        }
+        repository.persist(customer);
     }
 }

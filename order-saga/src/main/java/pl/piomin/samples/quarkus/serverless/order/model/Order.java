@@ -2,10 +2,7 @@ package pl.piomin.samples.quarkus.serverless.order.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "orders")
@@ -22,6 +19,9 @@ public class Order {
     private Integer productId;
     private int amount;
     private int productCount;
+    private String rejectedService;
     @Enumerated
     private OrderStatus status = OrderStatus.NEW;
+    @Transient
+    private String source;
 }

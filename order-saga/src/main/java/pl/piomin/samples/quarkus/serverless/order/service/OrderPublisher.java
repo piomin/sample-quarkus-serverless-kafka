@@ -29,7 +29,7 @@ public class OrderPublisher {
     public Multi<Order> orderEventsPublish() {
         return Multi.createFrom().ticks().every(Duration.ofSeconds(1))
                 .map(tick -> {
-                    Order o = new Order(++num, (int) num%10+1, (int) num%10+1, 100, 1, OrderStatus.NEW);
+                    Order o = new Order(++num, (int) num%10+1, (int) num%10+1, 100, 1, OrderStatus.NEW, null);
                     try {
                         transaction.begin();
                         repository.persist(o);
