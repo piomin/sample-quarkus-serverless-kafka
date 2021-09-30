@@ -21,14 +21,14 @@ public class OrderPublisher {
     @Inject
     Logger log;
     @Inject
-    private OrderRepository repository;
+    OrderRepository repository;
     @Inject
-    private UserTransaction transaction;
+    UserTransaction transaction;
 
     @Outgoing("order-events")
     @Broadcast
     public Multi<Order> orderEventsPublish() {
-        return Multi.createFrom().ticks().every(Duration.ofSeconds(1))
+        return Multi.createFrom().ticks().every(Duration.ofSeconds(10))
                 .map(tick -> {
                     Order o = new Order(++num, (int) num%10+1, (int) num%10+1, 100, 1, OrderStatus.NEW);
                     try {

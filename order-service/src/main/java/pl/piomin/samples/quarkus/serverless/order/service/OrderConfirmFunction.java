@@ -11,11 +11,11 @@ import javax.inject.Inject;
 public class OrderConfirmFunction {
 
     @Inject
-    private Logger log;
+    Logger log;
     @Inject
-    private OrderRepository repository;
+    OrderRepository repository;
     @Inject
-    private OrderSender sender;
+    OrderSender sender;
 
     @Funq
     public void confirm(Order order) {

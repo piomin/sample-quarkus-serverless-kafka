@@ -93,4 +93,18 @@ public class Order {
     public void setSource(String source) {
         this.source = source;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", productId=" + productId +
+                ", amount=" + amount +
+                ", productCount=" + productCount +
+                ", rejectedService='" + rejectedService + '\'' +
+                ", status=" + status +
+                ", source='" + source + '\'' +
+                '}';
+    }
 }
