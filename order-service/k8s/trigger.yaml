@@ -1,0 +1,16 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: order-trigger
+spec:
+  broker: pminkows-broker
+  filter:
+    attributes:
+      type: dev.knative.kafka.event
+      source: /apis/v1/namespaces/pminkows-serverless/kafkasources/kafka-source-to-broker#reserve-events
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: order-service
+    uri: /confirm

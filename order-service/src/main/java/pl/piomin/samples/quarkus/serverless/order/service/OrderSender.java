@@ -11,7 +11,7 @@ import javax.inject.Inject;
 public class OrderSender {
 
     @Inject
-    @Channel("reserve-events")
+    @Channel("order-events")
     Emitter<Order> orderEmitter;
 
     public void send(Order order) {
