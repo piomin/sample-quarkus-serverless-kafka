@@ -1,7 +1,5 @@
 package pl.piomin.samples.quarkus.serverless.order.model;
 
-import lombok.*;
-
 import javax.persistence.*;
 
 @Entity

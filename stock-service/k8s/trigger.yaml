@@ -1,0 +1,16 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: stock-trigger
+spec:
+  broker: pminkows-broker
+  filter:
+    attributes:
+      type: dev.knative.kafka.event
+      source: /apis/v1/namespaces/<your-namespace>/kafkasources/<your-kafka-source-name>#order-events
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: payment-saga
+    uri: /reserve

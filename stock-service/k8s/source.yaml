@@ -5,11 +5,11 @@ metadata:
 spec:
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
+  consumerGroup: stock
   topics:
     - order-events
   sink:
     ref:
-      apiVersion: serving.knative.dev/v1
-      kind: Service
-      name: product-saga
-    uri: /reserve
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: pminkows-broker

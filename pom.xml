@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>order-saga</module>
-        <module>customer-saga</module>
-        <module>product-saga</module>
+        <module>order-service</module>
+        <module>payment-service</module>
+        <module>stock-service</module>
     </modules>
 
 </project>

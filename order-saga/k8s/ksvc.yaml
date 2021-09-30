@@ -1,9 +1,0 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
-metadata:
-  name: order-saga
-spec:
-  template:
-    spec:
-      containers:
-        - image: dev.local/order-saga

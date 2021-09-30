@@ -1,7 +1,6 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.quarkus.funqy.Funq;
-import lombok.extern.slf4j.Slf4j;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
