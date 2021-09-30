@@ -6,6 +6,6 @@ spec:
   subject:
     apiVersion: serving.knative.dev/v1
     kind: Service
-    name: product-saga
+    name: stock-service
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
