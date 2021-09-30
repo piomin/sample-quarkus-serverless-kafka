@@ -1,7 +1,7 @@
 apiVersion: bindings.knative.dev/v1beta1
 kind: KafkaBinding
 metadata:
-  name: kafka-binding-product-saga
+  name: kafka-binding-stock
 spec:
   subject:
     apiVersion: serving.knative.dev/v1
