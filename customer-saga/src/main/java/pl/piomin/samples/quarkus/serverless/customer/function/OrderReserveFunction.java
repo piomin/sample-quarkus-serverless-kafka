@@ -13,6 +13,8 @@ import javax.inject.Inject;
 
 public class OrderReserveFunction {
 
+    private static final String SOURCE = "payment";
+
     @Inject
     private Logger log;
     @Inject
@@ -41,6 +43,7 @@ public class OrderReserveFunction {
         } else {
             order.setStatus(OrderStatus.REJECTED);
         }
+        order.setSource(SOURCE);
         log.infof("Order reserved: %s", order);
         orderEmitter.send(order);
     }
@@ -50,10 +53,12 @@ public class OrderReserveFunction {
         log.infof("Customer: %s", customer);
         if (order.getStatus() == OrderStatus.CONFIRMED) {
             customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
-        } else if (order.getStatus() == OrderStatus.ROLLBACK) {
+            repository.persist(customer);
+        } else if (order.getStatus() == OrderStatus.ROLLBACK && !order.getRejectedService().equals(SOURCE)) {
             customer.setAmountReserved(customer.getAmountReserved() - order.getAmount());
             customer.setAmountAvailable(customer.getAmountAvailable() + order.getAmount());
+            repository.persist(customer);
         }
-        repository.persist(customer);
+
     }
 }
