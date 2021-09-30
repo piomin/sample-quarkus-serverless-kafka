@@ -16,7 +16,7 @@ public class OrderConfirmFunction {
     @Inject
     private OrderRepository repository;
     @Inject
-    private OrderConfirmPublisher publisher;
+    private OrderSender sender;
 
     @Funq
     public void confirm(Order order) {
@@ -36,12 +36,12 @@ public class OrderConfirmFunction {
             else
                 order.setStatus(OrderStatus.CONFIRMED);
             log.infof("Order confirmed: %s", order);
-            publisher.send(order);
+            sender.send(order);
         } else if (order.getStatus() == OrderStatus.REJECTED) {
             order.setStatus(OrderStatus.ROLLBACK);
             order.setRejectedService(o.getSource());
             log.infof("Order rejected: %s", order);
-            publisher.send(order);
+            sender.send(order);
         }
         repository.persist(order);
     }
