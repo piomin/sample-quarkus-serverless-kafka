@@ -1,5 +1,6 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
+import io.quarkus.arc.Lock;
 import io.quarkus.funqy.Funq;
 import io.quarkus.narayana.jta.runtime.TransactionConfiguration;
 import org.jboss.logging.Logger;
@@ -8,6 +9,7 @@ import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
 
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
 import javax.transaction.Transactional;
 
 public class OrderConfirmFunction {
@@ -27,7 +29,7 @@ public class OrderConfirmFunction {
     }
 
     private void doConfirm(Order o) {
-        Order order = repository.findById(o.getId());
+        Order order = repository.findById(o.getId(), LockModeType.PESSIMISTIC_WRITE);
         log.infof("Order found: %s", order);
         if (order.getStatus() == OrderStatus.NEW) {
             order.setStatus(o.getStatus());
