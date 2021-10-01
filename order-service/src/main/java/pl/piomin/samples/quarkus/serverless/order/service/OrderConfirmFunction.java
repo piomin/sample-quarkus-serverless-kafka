@@ -1,12 +1,14 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.quarkus.funqy.Funq;
+import io.quarkus.narayana.jta.runtime.TransactionConfiguration;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 public class OrderConfirmFunction {
 
@@ -18,13 +20,15 @@ public class OrderConfirmFunction {
     OrderSender sender;
 
     @Funq
+    @Transactional
     public void confirm(Order order) {
-        log.infof("Confirmed order: %s", order);
+        log.infof("Response order: %s", order);
         doConfirm(order);
     }
 
     private void doConfirm(Order o) {
         Order order = repository.findById(o.getId());
+        log.infof("Order found: %s", order);
         if (order.getStatus() == OrderStatus.NEW) {
             order.setStatus(o.getStatus());
             if (o.getStatus() == OrderStatus.REJECTED)
@@ -43,5 +47,6 @@ public class OrderConfirmFunction {
             sender.send(order);
         }
         repository.persist(order);
+        log.infof("Order updated: %s", order);
     }
 }

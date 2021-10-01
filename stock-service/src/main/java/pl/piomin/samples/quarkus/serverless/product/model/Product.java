@@ -53,4 +53,14 @@ public class Product {
     public void setReservedItems(int reservedItems) {
         this.reservedItems = reservedItems;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", availableItems=" + availableItems +
+                ", reservedItems=" + reservedItems +
+                '}';
+    }
 }
