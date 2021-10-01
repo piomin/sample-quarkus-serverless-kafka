@@ -10,11 +10,5 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class OrderSender {
 
-    @Inject
-    @Channel("order-events")
-    Emitter<Order> orderEmitter;
-
-    public void send(Order order) {
-        orderEmitter.send(order);
-    }
+    // TODO - add emitter and implementation
 }

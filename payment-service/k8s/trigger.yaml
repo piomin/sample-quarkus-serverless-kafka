@@ -1,16 +1,16 @@
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
-  name: payment-trigger
+  name: <todo>
 spec:
-  broker: pminkows-broker
+  broker: <todo>
   filter:
     attributes:
       type: dev.knative.kafka.event
-      source: /apis/v1/namespaces/pminkows-serverless/kafkasources/kafka-source-to-broker#order-events
+      source: <todo>
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1
       kind: Service
       name: payment-service
-    uri: /reserve
+    uri: <todo>
