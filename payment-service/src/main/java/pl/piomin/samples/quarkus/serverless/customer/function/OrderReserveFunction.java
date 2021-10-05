@@ -1,6 +1,5 @@
 package pl.piomin.samples.quarkus.serverless.customer.function;
 
-import io.quarkus.funqy.Funq;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
@@ -16,7 +15,6 @@ public class OrderReserveFunction {
     @Inject
     CustomerRepository repository;
 
-    @Funq
     public void reserve(Order order) {
         log.infof("Received order: %s", order);
         // TODO - finish implementation
