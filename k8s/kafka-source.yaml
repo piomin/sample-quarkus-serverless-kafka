@@ -7,10 +7,9 @@ spec:
     - my-cluster-kafka-bootstrap.kafka:9092
   consumerGroup: a
   topics:
-    - order-events
-    - reserve-events
+    -
   sink:
     ref:
       apiVersion: eventing.knative.dev/v1
       kind: Broker
-      name: pminkows-broker
+      name: <todo>
