@@ -7,7 +7,7 @@ spec:
   filter:
     attributes:
       type: dev.knative.kafka.event
-      source: /apis/v1/namespaces/demo/kafkasources/kafka-source-to-broker#order-events
+      source: /apis/v1/namespaces/demo-apps/kafkasources/kafka-source-to-broker#order-events
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1

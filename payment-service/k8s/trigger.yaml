@@ -1,13 +1,13 @@
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
 metadata:
-  name: <todo>
+  name: payment-trigger
 spec:
   broker: <todo>
   filter:
     attributes:
       type: dev.knative.kafka.event
-      source: <todo>
+      source: /apis/v1/namespaces/demo-apps/kafkasources/kafka-source-to-broker#order-events
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1

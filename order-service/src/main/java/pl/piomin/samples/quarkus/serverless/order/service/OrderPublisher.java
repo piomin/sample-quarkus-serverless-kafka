@@ -7,6 +7,7 @@ import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.UserTransaction;
 import java.util.Random;
 
 @ApplicationScoped
@@ -20,6 +21,8 @@ public class OrderPublisher {
     Logger log;
     @Inject
     OrderRepository repository;
+    @Inject
+    UserTransaction userTransaction;
 
     public Multi<Order> publisher() {
         // TODO - add method for generating and sending messages
