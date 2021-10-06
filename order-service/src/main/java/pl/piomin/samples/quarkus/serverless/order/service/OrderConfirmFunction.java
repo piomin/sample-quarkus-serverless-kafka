@@ -13,6 +13,8 @@ public class OrderConfirmFunction {
     Logger log;
     @Inject
     OrderRepository repository;
+    @Inject
+    OrderSender sender;
 
     public void confirm(Order order) {
         log.infof("Response order: %s", order);
