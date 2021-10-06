@@ -17,15 +17,15 @@ public class OrderReserveFunction {
 
     public void reserve(Order order) {
         log.infof("Received order: %s", order);
-        // TODO - finish implementation
+
     }
 
     private void doReserve(Order order) {
-        // TODO - provide implementation
+
     }
 
     private void doConfirm(Order order) {
-        // TODO - provide implementation
+
     }
 
 }
