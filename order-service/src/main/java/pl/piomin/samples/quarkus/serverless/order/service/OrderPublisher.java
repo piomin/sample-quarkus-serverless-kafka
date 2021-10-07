@@ -25,8 +25,7 @@ public class OrderPublisher {
     UserTransaction userTransaction;
 
     public Multi<Order> publisher() {
-        // TODO - add method for generating and sending messages
-        return null;
+        return Multi.createFrom();
     }
 
 }
