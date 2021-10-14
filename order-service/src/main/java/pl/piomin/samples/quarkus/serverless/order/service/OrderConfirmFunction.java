@@ -1,13 +1,15 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.quarkus.funqy.Funq;
-import lombok.extern.slf4j.Slf4j;
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
 
 import javax.inject.Inject;
+import javax.persistence.LockModeType;
+import javax.transaction.Transactional;
 
 public class OrderConfirmFunction {
 
@@ -16,16 +18,17 @@ public class OrderConfirmFunction {
     @Inject
     private OrderRepository repository;
     @Inject
-    private OrderConfirmPublisher publisher;
+    private OrderSender publisher;
 
     @Funq
+    @Transactional
     public void confirm(Order order) {
         log.infof("Confirmed order: %s", order);
         doConfirm(order);
     }
 
     private void doConfirm(Order o) {
-        Order order = repository.findById(o.getId());
+        Order order = repository.findById(o.getId(), LockModeType.PESSIMISTIC_WRITE);
         if (order.getStatus() == OrderStatus.NEW) {
             order.setStatus(o.getStatus());
             if (o.getStatus() == OrderStatus.REJECTED)
