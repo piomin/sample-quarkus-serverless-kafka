@@ -1,9 +1,8 @@
 package pl.piomin.samples.quarkus.serverless.customer.function;
 
 import io.quarkus.funqy.Funq;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
@@ -16,12 +15,11 @@ public class OrderReserveFunction {
     private static final String SOURCE = "payment";
 
     @Inject
-    private Logger log;
+    Logger log;
     @Inject
-    private CustomerRepository repository;
+    CustomerRepository repository;
     @Inject
-    @Channel("reserve-events")
-    Emitter<Order> orderEmitter;
+    OrderSender sender;
 
     @Funq
     public void reserve(Order order) {
@@ -45,7 +43,7 @@ public class OrderReserveFunction {
         }
         order.setSource(SOURCE);
         log.infof("Order reserved: %s", order);
-        orderEmitter.send(order);
+        sender.send(order);
     }
 
     private void doConfirm(Order order) {
