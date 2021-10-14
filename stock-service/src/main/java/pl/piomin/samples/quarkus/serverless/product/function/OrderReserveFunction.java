@@ -4,6 +4,7 @@ import io.quarkus.funqy.Funq;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.product.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.product.message.Order;
 import pl.piomin.samples.quarkus.serverless.product.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.product.model.Product;
@@ -16,13 +17,11 @@ public class OrderReserveFunction {
     private static final String SOURCE = "stock";
 
     @Inject
-    private ProductRepository repository;
+    ProductRepository repository;
     @Inject
-    private Logger log;
-
+    Logger log;
     @Inject
-    @Channel("reserve-events")
-    Emitter<Order> orderEmitter;
+    OrderSender sender;
 
     @Funq
     public void reserve(Order order) {
@@ -47,7 +46,7 @@ public class OrderReserveFunction {
             }
             order.setSource(SOURCE);
             log.infof("Order reserved: %s", order);
-            orderEmitter.send(order);
+            sender.send(order);
         }
     }
 

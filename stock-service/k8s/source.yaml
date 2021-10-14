@@ -1,7 +1,7 @@
 apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
 metadata:
-  name: kafka-source-orders-product
+  name: kafka-source-stock
 spec:
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
@@ -11,5 +11,5 @@ spec:
     ref:
       apiVersion: serving.knative.dev/v1
       kind: Service
-      name: product-saga
+      name: stock-service
     uri: /reserve
