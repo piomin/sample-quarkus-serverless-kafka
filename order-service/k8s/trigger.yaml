@@ -13,5 +13,4 @@ spec:
       apiVersion: serving.knative.dev/v1
       kind: Service
       name: order-service
-      namespace: demo-apps
     uri: /confirm
