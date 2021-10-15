@@ -22,11 +22,11 @@ public class OrderPublisher {
     @Inject
     Logger log;
     @Inject
-    private OrderRepository repository;
+    OrderRepository repository;
     @Inject
-    private UserTransaction transaction;
+    UserTransaction transaction;
     @ConfigProperty(name = "app.orders.timeout", defaultValue = "10000")
-    private int timeout;
+    int timeout;
 
     @Outgoing("order-events")
     @Broadcast
