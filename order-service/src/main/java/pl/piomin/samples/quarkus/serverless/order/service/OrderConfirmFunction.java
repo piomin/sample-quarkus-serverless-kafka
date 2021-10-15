@@ -29,7 +29,9 @@ public class OrderConfirmFunction {
 
     private void doConfirm(Order o) {
         Order order = repository.findById(o.getId(), LockModeType.PESSIMISTIC_WRITE);
-        if (order.getStatus() == OrderStatus.NEW) {
+        if (order == null) {
+            return;
+        } else if (order.getStatus() == OrderStatus.NEW) {
             order.setStatus(o.getStatus());
             if (o.getStatus() == OrderStatus.REJECTED)
                 order.setRejectedService(o.getSource());
