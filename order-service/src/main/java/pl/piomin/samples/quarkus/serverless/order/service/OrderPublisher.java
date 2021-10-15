@@ -25,7 +25,7 @@ public class OrderPublisher {
     private OrderRepository repository;
     @Inject
     private UserTransaction transaction;
-    @ConfigProperty(name = "app.orders.timeout")
+    @ConfigProperty(name = "app.orders.timeout", defaultValue = "10000")
     private int timeout;
 
     @Outgoing("order-events")
