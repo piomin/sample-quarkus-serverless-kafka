@@ -1,6 +1,7 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.smallrye.mutiny.Multi;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
@@ -22,7 +23,9 @@ public class OrderPublisher {
     @Inject
     OrderRepository repository;
     @Inject
-    UserTransaction userTransaction;
+    UserTransaction transaction;
+    @ConfigProperty(name = "app.orders.timeout", defaultValue = "10000")
+    int timeout;
 
     public Multi<Order> publisher() {
         return Multi.createFrom();

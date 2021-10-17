@@ -1,4 +1,4 @@
-package pl.piomin.samples.quarkus.serverless.customer.service;
+package pl.piomin.samples.quarkus.serverless.customer.client;
 
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 

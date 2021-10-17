@@ -5,7 +5,7 @@ import pl.piomin.samples.quarkus.serverless.customer.exception.NotFoundException
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
-import pl.piomin.samples.quarkus.serverless.customer.service.OrderSender;
+import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 
 import javax.inject.Inject;
 

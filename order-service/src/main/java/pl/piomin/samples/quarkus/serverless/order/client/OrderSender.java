@@ -1,4 +1,4 @@
-package pl.piomin.samples.quarkus.serverless.order.service;
+package pl.piomin.samples.quarkus.serverless.order.client;
 
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
