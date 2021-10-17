@@ -18,31 +18,29 @@ public class OrderService {
     Logger log;
     @Inject
     OrderRepository repository;
-    @Inject
-    OrderSender publisher;
 
     @Transactional
-    public void doConfirm(Order o) {
+    public Order doConfirm(Order o) {
         Order order = repository.findById(o.getId(), LockModeType.PESSIMISTIC_WRITE);
         if (order == null) {
-            return;
+            return null;
         } else if (order.getStatus() == OrderStatus.NEW) {
             order.setStatus(o.getStatus());
             if (o.getStatus() == OrderStatus.REJECTED)
                 order.setRejectedService(o.getSource());
+            return null;
         } else if (order.getStatus() == OrderStatus.IN_PROGRESS) {
             if (o.getStatus() == OrderStatus.REJECTED)
                 order.setStatus(OrderStatus.ROLLBACK);
             else
                 order.setStatus(OrderStatus.CONFIRMED);
             log.infof("Order confirmed: %s", order);
-            publisher.send(order);
         } else if (order.getStatus() == OrderStatus.REJECTED) {
             order.setStatus(OrderStatus.ROLLBACK);
             order.setRejectedService(o.getSource());
             log.infof("Order rejected: %s", order);
-            publisher.send(order);
         }
         repository.persist(order);
+        return order;
     }
 }
