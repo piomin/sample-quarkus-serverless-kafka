@@ -37,6 +37,7 @@ public class OrderService {
             log.infof("Order rejected: %s", order);
         }
         repository.persist(order);
+        log.infof("Order saved: %s", order);
         return order;
     }
 }
