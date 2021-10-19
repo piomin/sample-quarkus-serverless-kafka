@@ -91,8 +91,8 @@ spec:
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
   topics:
-    - order-events
-    - reserve-events
+    - <your-order-events-topic>
+    - <your-reserve-events-topic>
   sink:
     ref:
       apiVersion: eventing.knative.dev/v1
