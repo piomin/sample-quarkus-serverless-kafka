@@ -161,3 +161,16 @@ spec:
       name: order-service
     uri: /confirm
 ```
+
+8. Configure autoscaling for `payment-service` and `stock-service`
+
+Edit Knative `Service` YAML and add the following annotations:
+```yaml
+      annotations:
+        autoscaling.knative.dev/target: "50"
+        autoscaling.knative.dev/metric: "rps"
+```
+
+9. Change timeout for `order-service`
+
+Edit Knative `Service` YAML and change `TICK_TIMEOUT` env
