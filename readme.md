@@ -30,8 +30,8 @@ spec:
 ```
 
 4. Deploy applications
-`order-service` -> quay.io/pminkows/order-service. Set env `KAFKA_TOPIC`, `TICK_TIMEOUT`
-`stock-service` -> quay.io/pminkows/stock-service. Set env `KAFKA_TOPIC`
+`order-service` -> quay.io/pminkows/order-service. Set env `KAFKA_TOPIC`, `TICK_TIMEOUT` \
+`stock-service` -> quay.io/pminkows/stock-service. Set env `KAFKA_TOPIC` \
 `payment-service` -> quay.io/pminkows/payment-service. Set env `KAFKA_TOPIC`
 
 5. Create `KafkaBinding` for each application to inject Kafka address
