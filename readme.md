@@ -7,3 +7,156 @@ Currently, you may find here some examples of microservices implementation using
 ## Usage
 
 ## Architecture
+
+## Test on OpenShift
+
+1. Login to OpenShift Dashboard https://console-openshift-console.apps.qyt1tahi.eastus.aroapp.io/
+2. Create your project
+3. Create Knative `Broker`
+
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+  annotations:
+    eventing.knative.dev/broker.class: MTChannelBasedBroker
+  name: default
+spec:
+  config:
+    apiVersion: v1
+    kind: ConfigMap
+    name: config-br-default-channel
+    namespace: knative-eventing
+```
+
+4. Deploy applications
+`order-service` -> quay.io/pminkows/order-service. Set env `KAFKA_TOPIC`, `TICK_TIMEOUT`
+`stock-service` -> quay.io/pminkows/stock-service. Set env `KAFKA_TOPIC`
+`payment-service` -> quay.io/pminkows/payment-service. Set env `KAFKA_TOPIC`
+
+5. Create `KafkaBinding` for each application to inject Kafka address
+
+For `stock-service`:
+```yaml
+apiVersion: bindings.knative.dev/v1beta1
+kind: KafkaBinding
+metadata:
+  name: kafka-binding-stock
+spec:
+  subject:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: stock-service
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+```
+For `payment-service`:
+```yaml
+apiVersion: bindings.knative.dev/v1beta1
+kind: KafkaBinding
+metadata:
+  name: kafka-binding-payment
+spec:
+  subject:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: payment-service
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+```
+For `order-service`:
+```yaml
+apiVersion: bindings.knative.dev/v1beta1
+kind: KafkaBinding
+metadata:
+  name: kafka-binding-order
+spec:
+  subject:
+    apiVersion: serving.knative.dev/v1
+    kind: Service
+    name: order-service
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+```
+
+6. Create `KafkaSource` to get messages from Kafka and send them to the Knative `Broker`
+
+```yaml
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: kafka-source-to-broker
+spec:
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+  topics:
+    - order-events
+    - reserve-events
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+```
+
+7. Create Knative `Trigger` for applications
+
+For `stock-service`:
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: stock-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      source: /apis/v1/namespaces/<your-namespace>/kafkasources/kafka-source-to-broker#<your-topic>
+      type: dev.knative.kafka.event
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: stock-service
+    uri: /reserve
+```
+
+For `payment-service`:
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: payment-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      source: /apis/v1/namespaces/<your-namespace>/kafkasources/kafka-source-to-broker#<your-topic>
+      type: dev.knative.kafka.event
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: payment-service
+    uri: /reserve
+```
+
+For `order-service`:
+```yaml
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: order-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      source: /apis/v1/namespaces/<your-namespace>/kafkasources/kafka-source-to-broker#<your-topic>
+      type: dev.knative.kafka.event
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: order-service
+    uri: /confirm
+```
