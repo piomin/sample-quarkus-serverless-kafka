@@ -1,3 +1,9 @@
+Min-scale
+```yaml
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+```
+
 Autoscaling
 
 ```yaml
