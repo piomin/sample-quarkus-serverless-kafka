@@ -19,7 +19,7 @@ public class ProductApplication {
     @Inject
     Logger log;
     @Inject
-    private ProductRepository repository;
+    ProductRepository repository;
 
     @Transactional
     void onStart(@Observes StartupEvent ev) {
