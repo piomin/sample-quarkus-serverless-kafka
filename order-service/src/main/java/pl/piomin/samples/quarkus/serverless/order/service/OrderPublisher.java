@@ -1,7 +1,9 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
@@ -25,7 +27,6 @@ public class OrderPublisher {
     UserTransaction transaction;
     @ConfigProperty(name = "app.orders.timeout", defaultValue = "10000")
     int timeout;
-
 
     public Multi<Order> orderEventsPublish() {
         return Multi.createFrom().ticks().every(Duration.ofMillis(timeout))

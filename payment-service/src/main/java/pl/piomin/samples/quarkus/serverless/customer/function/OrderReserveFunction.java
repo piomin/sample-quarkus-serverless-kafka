@@ -1,11 +1,12 @@
 package pl.piomin.samples.quarkus.serverless.customer.function;
 
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.customer.exception.NotFoundException;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
+import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
-import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 
 import javax.inject.Inject;
 
@@ -22,7 +23,6 @@ public class OrderReserveFunction {
 
     public void reserve(Order order) {
         log.infof("Received order: %s", order);
-
     }
 
     private void doReserve(Order order) {
@@ -30,7 +30,6 @@ public class OrderReserveFunction {
         if (c == null)
             throw new NotFoundException();
         log.infof("Customer found: %s", c);
-
         order.setSource(SOURCE);
         log.infof("Order reservation: %s", order);
     }
@@ -40,6 +39,14 @@ public class OrderReserveFunction {
         if (c == null)
             throw new NotFoundException();
         log.infof("Customer found: %s", c);
+        if (order.getStatus() == OrderStatus.CONFIRMED) {
+            c.setAmountReserved(c.getAmountReserved() - order.getAmount());
+            repository.persist(c);
+        } else if (order.getStatus() == OrderStatus.ROLLBACK && !order.getSource().equals(SOURCE)) {
+            c.setAmountAvailable(c.getAmountAvailable() - order.getAmount());
+            c.setAmountReserved(c.getAmountReserved() + order.getAmount());
+            repository.persist(c);
+        }
     }
 
 }
