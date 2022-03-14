@@ -1,0 +1,27 @@
+name: order-service
+namespace: ""
+runtime: quarkus
+image: quay.io/pminkows/order-service
+imageDigest: sha256:7bdcc501686336eea143d45562d2dc1e17cbb2ba02d774c85da6f738ff0aa46c
+builder: quay.io/boson/faas-jvm-builder:v0.8.4
+builders:
+  default: quay.io/boson/faas-jvm-builder:v0.8.4
+  jvm: quay.io/boson/faas-jvm-builder:v0.8.4
+  native: quay.io/boson/faas-quarkus-native-builder:v0.8.4
+buildpacks: []
+healthEndpoints:
+  liveness: /q/health/live
+  readiness: /q/health/ready
+volumes: []
+buildEnvs: []
+envs:
+- name: KAFKA_TOPIC
+  value: order-events
+- name: TICK_TIMEOUT
+  value: "1000"
+annotations: {}
+options:
+  scale:
+    metric: rps
+    target: 50
+labels: []
