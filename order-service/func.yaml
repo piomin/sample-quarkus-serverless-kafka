@@ -14,14 +14,8 @@ healthEndpoints:
   readiness: /q/health/ready
 volumes: []
 buildEnvs: []
-envs:
-- name: KAFKA_TOPIC
-  value: order-events
-- name: TICK_TIMEOUT
-  value: "1000"
+# add ENVs
+envs: []
 annotations: {}
-options:
-  scale:
-    metric: rps
-    target: 50
+# change autoscaling
 labels: []
