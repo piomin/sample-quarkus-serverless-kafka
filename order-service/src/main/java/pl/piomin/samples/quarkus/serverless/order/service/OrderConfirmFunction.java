@@ -19,7 +19,7 @@ public class OrderConfirmFunction {
     @Funq
     public void confirm(Order order) {
         log.infof("Accepted order: %s", order);
-        Order  o = orderService.doConfirm(order);
+        Order o = orderService.doConfirm(order);
         if (o != null) {
             sender.send(o);
         }
