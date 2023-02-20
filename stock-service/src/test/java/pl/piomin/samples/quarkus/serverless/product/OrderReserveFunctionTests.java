@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderReserveFunctionTests {
 
-    private static int reserved;
+    private static int items;
     private ProductRepository repository;
 
     public OrderReserveFunctionTests(ProductRepository repository) {
@@ -26,21 +26,27 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(1)
     void reserve() {
-        Product p = repository.findById(1L);
-        reserved = p.getReservedItems();
-        given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
+        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
                 .then()
-                .statusCode(204);
+                .statusCode(200)
+                .extract().body().as(Product.class);
+
+        items = p.getAvailableItems();
+        assertEquals(5, p.getReservedItems());
     }
 
     @Test
     @org.junit.jupiter.api.Order(2)
     void confirm() {
-        given().contentType("application/json").body(createTestOrder(OrderStatus.IN_PROGRESS)).post("/reserve")
+        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.IN_PROGRESS)).post("/reserve")
                 .then()
-                .statusCode(204);
-        Product p = repository.findById(1L);
-//        assertEquals(reserved - 5, p.getReservedItems());
+                .statusCode(200)
+                .extract().body().as(Product.class);
+
+//        assertEquals(0, p.getReservedItems());
+//        assertEquals(items-5, p.getAvailableItems());
+
+        p = repository.findById(p.getId());
     }
 
     private Order createTestOrder(OrderStatus status) {

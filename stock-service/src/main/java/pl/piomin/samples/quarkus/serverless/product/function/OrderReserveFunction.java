@@ -1,8 +1,6 @@
 package pl.piomin.samples.quarkus.serverless.product.function;
 
 import io.quarkus.funqy.Funq;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.product.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.product.message.Order;
@@ -11,6 +9,7 @@ import pl.piomin.samples.quarkus.serverless.product.model.Product;
 import pl.piomin.samples.quarkus.serverless.product.repository.ProductRepository;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 public class OrderReserveFunction {
 
@@ -24,15 +23,16 @@ public class OrderReserveFunction {
     OrderSender sender;
 
     @Funq
-    public void reserve(Order order) {
+//    @Transactional
+    public Product reserve(Order order) {
         log.infof("Received order: %s", order);
         if (order.getStatus() == OrderStatus.NEW)
-            doReserve(order);
+            return doReserve(order);
         else
-            doConfirm(order);
+            return doConfirm(order);
     }
 
-    private void doReserve(Order order) {
+    private Product doReserve(Order order) {
         Product product = repository.findById(order.getProductId());
         log.infof("Product: %s", product);
         if (order.getStatus() == OrderStatus.NEW) {
@@ -48,9 +48,10 @@ public class OrderReserveFunction {
             log.infof("Order reserved: %s", order);
             sender.send(order);
         }
+        return product;
     }
 
-    private void doConfirm(Order order) {
+    private Product doConfirm(Order order) {
         Product product = repository.findById(order.getProductId());
         log.infof("Product: %s", product);
         if (order.getStatus() == OrderStatus.CONFIRMED) {
@@ -61,5 +62,6 @@ public class OrderReserveFunction {
             product.setAvailableItems(product.getAvailableItems() + order.getProductsCount());
             repository.persist(product);
         }
+        return product;
     }
 }
