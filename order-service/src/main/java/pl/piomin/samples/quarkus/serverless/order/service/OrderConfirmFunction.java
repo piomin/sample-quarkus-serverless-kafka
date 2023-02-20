@@ -17,12 +17,13 @@ public class OrderConfirmFunction {
     OrderSender sender;
 
     @Funq
-    public void confirm(Order order) {
+    public Order confirm(Order order) {
         log.infof("Accepted order: %s", order);
         Order o = orderService.doConfirm(order);
         if (o != null) {
             sender.send(o);
         }
+        return o;
     }
 
 }

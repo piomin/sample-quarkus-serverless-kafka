@@ -27,7 +27,7 @@ public class OrderService {
             order.setStatus(o.getStatus());
             if (o.getStatus() == OrderStatus.REJECTED)
                 order.setRejectedService(o.getSource());
-            return null;
+//            return null;
         } else if (order.getStatus() == OrderStatus.IN_PROGRESS) {
             if (o.getStatus() == OrderStatus.REJECTED)
                 order.setStatus(OrderStatus.ROLLBACK);

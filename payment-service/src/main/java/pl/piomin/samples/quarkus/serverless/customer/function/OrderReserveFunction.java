@@ -10,6 +10,7 @@ import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 public class OrderReserveFunction {
 
@@ -23,15 +24,15 @@ public class OrderReserveFunction {
     OrderSender sender;
 
     @Funq
-    public void reserve(Order order) {
+    public Customer reserve(Order order) {
         log.infof("Received order: %s", order);
         if (order.getStatus() == OrderStatus.NEW)
-            doReserve(order);
+            return doReserve(order);
         else
-            doConfirm(order);
+            return doConfirm(order);
     }
 
-    private void doReserve(Order order) {
+    private Customer doReserve(Order order) {
         Customer customer = repository.findById(order.getCustomerId());
         if (customer == null)
             throw new NotFoundException();
@@ -47,9 +48,10 @@ public class OrderReserveFunction {
         repository.persist(customer);
         log.infof("Order reserved: %s", order);
         sender.send(order);
+        return customer;
     }
 
-    private void doConfirm(Order order) {
+    private Customer doConfirm(Order order) {
         Customer customer = repository.findById(order.getCustomerId());
         if (customer == null)
             throw new NotFoundException();
@@ -62,6 +64,6 @@ public class OrderReserveFunction {
             customer.setAmountAvailable(customer.getAmountAvailable() + order.getAmount());
             repository.persist(customer);
         }
-
+        return customer;
     }
 }
