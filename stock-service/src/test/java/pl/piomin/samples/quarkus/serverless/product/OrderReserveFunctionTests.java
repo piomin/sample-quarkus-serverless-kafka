@@ -38,15 +38,16 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(2)
     void confirm() {
-        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.IN_PROGRESS)).post("/reserve")
+        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
                 .then()
                 .statusCode(200)
                 .extract().body().as(Product.class);
 
-//        assertEquals(0, p.getReservedItems());
-//        assertEquals(items-5, p.getAvailableItems());
+        assertEquals(0, p.getReservedItems());
 
         p = repository.findById(p.getId());
+        assertEquals(0,p.getReservedItems());
+        assertEquals(items, p.getAvailableItems());
     }
 
     private Order createTestOrder(OrderStatus status) {

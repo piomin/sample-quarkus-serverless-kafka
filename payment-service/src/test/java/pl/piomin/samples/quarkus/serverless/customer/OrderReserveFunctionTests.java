@@ -26,7 +26,6 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(1)
     void reserve() {
-
         Customer c = given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
                 .then()
                 .statusCode(200)
@@ -39,15 +38,15 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(2)
     void confirm() {
-//        assertEquals(100, c.getAmountReserved());
         Customer c = given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
                 .then()
                 .statusCode(200)
                 .extract().body().as(Customer.class);
-        // TODO - fix test logic or app logic
-//        Customer c = repository.findById(1L);
-//        assertEquals(0, c.getAmountReserved());
-//        assertEquals(amount - 100, c.getAmountAvailable());
+        assertEquals(0, c.getAmountReserved());
+
+        c = repository.findById(1L);
+        assertEquals(0, c.getAmountReserved());
+        assertEquals(amount, c.getAmountAvailable());
     }
 
     private Order createTestOrder(OrderStatus status) {
