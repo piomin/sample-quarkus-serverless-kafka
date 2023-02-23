@@ -1,0 +1,45 @@
+package pl.piomin.samples.quarkus.serverless.customer.service;
+
+import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.customer.exception.NotFoundException;
+import pl.piomin.samples.quarkus.serverless.customer.message.Order;
+import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
+import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
+import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.LockModeType;
+import javax.transaction.Transactional;
+
+@ApplicationScoped
+public class OrderReserveService {
+
+    private static final String SOURCE = "payment";
+
+    Logger log;
+    CustomerRepository repository;
+
+    public OrderReserveService(Logger log, CustomerRepository repository) {
+        this.log = log;
+        this.repository = repository;
+    }
+
+    @Transactional
+    public Customer doReserve(Order order) {
+        Customer customer = repository.findById(order.getCustomerId(), LockModeType.PESSIMISTIC_WRITE);
+        if (customer == null)
+            throw new NotFoundException();
+        log.infof("Customer: %s", customer);
+        if (order.getAmount() < customer.getAmountAvailable()) {
+            order.setStatus(OrderStatus.IN_PROGRESS);
+            customer.setAmountReserved(customer.getAmountReserved() + order.getAmount());
+            customer.setAmountAvailable(customer.getAmountAvailable() - order.getAmount());
+        } else {
+            order.setStatus(OrderStatus.REJECTED);
+        }
+        order.setSource(SOURCE);
+        repository.persist(customer);
+        log.infof("Order reserved: %s", order);
+        return customer;
+    }
+}

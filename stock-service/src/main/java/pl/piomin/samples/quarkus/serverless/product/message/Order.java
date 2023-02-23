@@ -55,4 +55,16 @@ public class Order {
     public void setRejectedService(String rejectedService) {
         this.rejectedService = rejectedService;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", productsCount=" + productsCount +
+                ", status=" + status +
+                ", source='" + source + '\'' +
+                ", rejectedService='" + rejectedService + '\'' +
+                '}';
+    }
 }

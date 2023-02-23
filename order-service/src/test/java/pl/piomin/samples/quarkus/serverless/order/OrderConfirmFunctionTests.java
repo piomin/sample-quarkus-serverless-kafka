@@ -1,13 +1,10 @@
 package pl.piomin.samples.quarkus.serverless.order;
 
-import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
-
-import javax.transaction.Transactional;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +19,6 @@ public class OrderConfirmFunctionTests {
     }
 
     @Test
-//    @Transactional
     void confirm() {
         // first response -> IN_PROGRESS
         Order o = given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
@@ -42,8 +38,7 @@ public class OrderConfirmFunctionTests {
         assertEquals(OrderStatus.CONFIRMED, o.getStatus());
     }
 
-//    @Test
-//    @Transactional
+    @Test
     void reject() {
         Order o = given().contentType("application/json").body(createTestOrder(2L, OrderStatus.REJECTED)).post("/confirm")
                 .then()
@@ -51,19 +46,17 @@ public class OrderConfirmFunctionTests {
                 .extract().body().as(Order.class);
         assertEquals(OrderStatus.REJECTED, o.getStatus());
 
-        o = repository.findById(1L);
+        o = repository.findById(o.getId());
         assertEquals(OrderStatus.REJECTED, o.getStatus());
         assertEquals("test", o.getRejectedService());
     }
 
     private Order createTestOrder(Long id, OrderStatus status) {
         Order o = new Order();
-        // TODO - change to auto-increment
         o.setId(id);
         o.setSource("test");
         o.setStatus(status);
         o.setAmount(100);
-//        repository.persist(o);
         return o;
     }
 }
