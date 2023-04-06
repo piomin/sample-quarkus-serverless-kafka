@@ -1,6 +1,7 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.quarkus.funqy.Funq;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
@@ -14,6 +15,7 @@ public class OrderConfirmFunction {
     @Inject
     OrderService orderService;
     @Inject
+    @RestClient
     OrderSender sender;
 
     @Funq

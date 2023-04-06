@@ -1,0 +1,43 @@
+apiVersion: eventing.knative.dev/v1alpha1
+kind: KafkaSink
+metadata:
+  name: payment-sink
+  namespace: demo-eventing
+spec:
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+  topic: reserve-events
+  numPartitions: 5
+---
+apiVersion: sources.knative.dev/v1beta1
+kind: KafkaSource
+metadata:
+  name: payment-source
+spec:
+  bootstrapServers:
+    - my-cluster-kafka-bootstrap.kafka:9092
+  topics:
+    - order-events
+  sink:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: order-service
+    uri: /confirm
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: payment-trigger
+spec:
+  broker: default
+  filter:
+    attributes:
+      source: /apis/v1/namespaces/default/kafkasources/kafka-source-to-broker#reserve-events
+      type: dev.knative.kafka.event
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: payment-service
+    uri: /reserve

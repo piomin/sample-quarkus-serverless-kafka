@@ -1,21 +1,20 @@
 package pl.piomin.samples.quarkus.serverless.order.client;
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 @ApplicationScoped
-public class OrderSender {
+@RegisterRestClient
+@RegisterClientHeaders(CloudEventHeadersFactory.class)
+public interface OrderSender {
 
-    @Inject
-    @Channel("order-events")
-    Emitter<Order> emitter;
-
-    public void send(Order order) {
-        emitter.send(order);
-    }
+    @POST
+    @Path("/order-sink")
+    void send(Order order);
 
 }

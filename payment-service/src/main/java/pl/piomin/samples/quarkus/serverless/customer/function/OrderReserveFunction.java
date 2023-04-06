@@ -1,6 +1,7 @@
 package pl.piomin.samples.quarkus.serverless.customer.function;
 
 import io.quarkus.funqy.Funq;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.customer.exception.NotFoundException;
@@ -24,6 +25,7 @@ public class OrderReserveFunction {
     @Inject
     OrderConfirmService orderConfirmService;
     @Inject
+    @RestClient
     OrderSender sender;
 
     @Funq

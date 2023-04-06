@@ -1,9 +1,12 @@
 package pl.piomin.samples.quarkus.serverless.customer;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
@@ -18,6 +21,9 @@ public class OrderReserveFunctionTests {
 
     private static int amount;
     private CustomerRepository repository;
+    @InjectMock
+    @RestClient
+    OrderSender sender;
 
     public OrderReserveFunctionTests(CustomerRepository repository) {
         this.repository = repository;

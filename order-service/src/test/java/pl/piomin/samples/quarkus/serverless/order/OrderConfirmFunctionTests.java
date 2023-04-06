@@ -1,7 +1,10 @@
 package pl.piomin.samples.quarkus.serverless.order;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.Test;
+import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
@@ -13,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class OrderConfirmFunctionTests {
 
     private OrderRepository repository;
+    @RestClient
+    @InjectMock
+    OrderSender sender;
 
     public OrderConfirmFunctionTests(OrderRepository repository) {
         this.repository = repository;
