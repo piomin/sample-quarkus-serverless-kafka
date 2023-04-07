@@ -32,11 +32,11 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(1)
     void reserve() {
-        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
+        given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Product.class);
+                .statusCode(204);
 
+        Product p = repository.findById(1L);
         items = p.getAvailableItems();
         assertEquals(5, p.getReservedItems());
     }
@@ -44,15 +44,12 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(2)
     void confirm() {
-        Product p = given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
+        given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Product.class);
+                .statusCode(204);
 
+        Product p = repository.findById(1L);
         assertEquals(0, p.getReservedItems());
-
-        p = repository.findById(p.getId());
-        assertEquals(0,p.getReservedItems());
         assertEquals(items, p.getAvailableItems());
     }
 

@@ -7,7 +7,6 @@ import pl.piomin.samples.quarkus.serverless.product.model.Product;
 import pl.piomin.samples.quarkus.serverless.product.repository.ProductRepository;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
@@ -15,10 +14,13 @@ public class OrderConfirmService {
 
     private static final String SOURCE = "stock";
 
-    @Inject
-    ProductRepository repository;
-    @Inject
-    Logger log;
+    private final ProductRepository repository;
+    private final Logger log;
+
+    public OrderConfirmService(ProductRepository repository, Logger log) {
+        this.repository = repository;
+        this.log = log;
+    }
 
     @Transactional
     public Product doConfirm(Order order) {

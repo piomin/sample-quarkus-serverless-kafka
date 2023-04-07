@@ -6,8 +6,8 @@ spec:
   broker: default
   filter:
     attributes:
-      source: /apis/v1/namespaces/default/kafkasources/kafka-source-to-broker#reserve-events
-      type: dev.knative.kafka.event
+      source: order
+      type: order-event
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1

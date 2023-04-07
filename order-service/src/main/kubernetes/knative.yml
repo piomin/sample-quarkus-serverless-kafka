@@ -12,18 +12,18 @@ spec:
 apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
 metadata:
-  name: order-source
+  name: kafka-source-to-broker
 spec:
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
   topics:
+    - order-events
     - reserve-events
   sink:
     ref:
-      apiVersion: serving.knative.dev/v1
-      kind: Service
-      name: order-service
-    uri: /confirm
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
 ---
 apiVersion: eventing.knative.dev/v1
 kind: Trigger
@@ -33,8 +33,7 @@ spec:
   broker: default
   filter:
     attributes:
-      source: /apis/v1/namespaces/default/kafkasources/kafka-source-to-broker#reserve-events
-      type: dev.knative.kafka.event
+      type: reserve-event
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1

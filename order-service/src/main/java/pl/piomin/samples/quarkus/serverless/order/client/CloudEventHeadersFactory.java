@@ -18,8 +18,8 @@ public class CloudEventHeadersFactory implements ClientHeadersFactory {
         MultivaluedMap<String, String> result = new MultivaluedHashMap<>();
         result.add("Ce-Id", String.valueOf(id.incrementAndGet()));
         result.add("Ce-Specversion", "1.0");
-        result.add("Ce-Type", "order");
-        result.add("Ce-Source", "stock");
+        result.add("Ce-Type", "order-event");
+        result.add("Ce-Source", "order");
         return result;
     }
 

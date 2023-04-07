@@ -27,32 +27,26 @@ public class OrderConfirmFunctionTests {
     @Test
     void confirm() {
         // first response -> IN_PROGRESS
-        Order o = given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Order.class);
-        assertEquals(OrderStatus.IN_PROGRESS, o.getStatus());
+                .statusCode(204);
 
         // second response -> CONFIRMED
-        o = given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Order.class);
-        assertEquals(OrderStatus.CONFIRMED, o.getStatus());
+                .statusCode(204);
 
-        o = repository.findById(1L);
+        Order o = repository.findById(1L);
         assertEquals(OrderStatus.CONFIRMED, o.getStatus());
     }
 
     @Test
     void reject() {
-        Order o = given().contentType("application/json").body(createTestOrder(2L, OrderStatus.REJECTED)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.REJECTED)).post("/confirm")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Order.class);
-        assertEquals(OrderStatus.REJECTED, o.getStatus());
+                .statusCode(204);
 
-        o = repository.findById(o.getId());
+        Order o = repository.findById(2L);
         assertEquals(OrderStatus.REJECTED, o.getStatus());
         assertEquals("test", o.getRejectedService());
     }

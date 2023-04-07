@@ -32,11 +32,11 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(1)
     void reserve() {
-        Customer c = given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
+        given().contentType("application/json").body(createTestOrder(OrderStatus.NEW)).post("/reserve")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Customer.class);
+                .statusCode(204);
 
+        Customer c = repository.findById(1L);
         amount = c.getAmountAvailable();
         assertEquals(100, c.getAmountReserved());
     }
@@ -44,13 +44,11 @@ public class OrderReserveFunctionTests {
     @Test
     @org.junit.jupiter.api.Order(2)
     void confirm() {
-        Customer c = given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
+        given().contentType("application/json").body(createTestOrder(OrderStatus.CONFIRMED)).post("/reserve")
                 .then()
-                .statusCode(200)
-                .extract().body().as(Customer.class);
-        assertEquals(0, c.getAmountReserved());
+                .statusCode(204);
 
-        c = repository.findById(1L);
+        Customer c = repository.findById(1L);
         assertEquals(0, c.getAmountReserved());
         assertEquals(amount, c.getAmountAvailable());
     }

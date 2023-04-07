@@ -1,6 +1,8 @@
 package pl.piomin.samples.quarkus.serverless.customer.service;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.customer.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.customer.exception.NotFoundException;
 import pl.piomin.samples.quarkus.serverless.customer.message.Order;
 import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
@@ -18,10 +20,14 @@ public class OrderReserveService {
 
     Logger log;
     CustomerRepository repository;
+    OrderSender sender;
 
-    public OrderReserveService(Logger log, CustomerRepository repository) {
+    public OrderReserveService(Logger log,
+                               CustomerRepository repository,
+                               @RestClient OrderSender sender) {
         this.log = log;
         this.repository = repository;
+        this.sender = sender;
     }
 
     @Transactional
@@ -40,6 +46,7 @@ public class OrderReserveService {
         order.setSource(SOURCE);
         repository.persist(customer);
         log.infof("Order reserved: %s", order);
+        sender.send(order);
         return customer;
     }
 }

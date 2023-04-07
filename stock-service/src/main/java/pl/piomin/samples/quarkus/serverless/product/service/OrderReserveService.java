@@ -1,6 +1,8 @@
 package pl.piomin.samples.quarkus.serverless.product.service;
 
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
+import pl.piomin.samples.quarkus.serverless.product.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.product.message.Order;
 import pl.piomin.samples.quarkus.serverless.product.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.product.model.Product;
@@ -15,10 +17,17 @@ public class OrderReserveService {
 
     private static final String SOURCE = "stock";
 
-    @Inject
-    ProductRepository repository;
-    @Inject
-    Logger log;
+    private ProductRepository repository;
+    private Logger log;
+    private OrderSender sender;
+
+    public OrderReserveService(ProductRepository repository,
+                               Logger log,
+                               @RestClient OrderSender sender) {
+        this.repository = repository;
+        this.log = log;
+        this.sender = sender;
+    }
 
     @Transactional
     public Product doReserve(Order order) {
@@ -35,7 +44,7 @@ public class OrderReserveService {
             }
             order.setSource(SOURCE);
             log.infof("Order reserved: %s", order);
-//            sender.send(order);
+            sender.send(order);
         }
         return product;
     }

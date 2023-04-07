@@ -1,31 +1,23 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
 import io.quarkus.funqy.Funq;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
-import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
-
-import javax.inject.Inject;
 
 public class OrderConfirmFunction {
 
-    @Inject
-    Logger log;
-    @Inject
-    OrderService orderService;
-    @Inject
-    @RestClient
-    OrderSender sender;
+    private final Logger log;
+    private final OrderService orderService;
+
+    public OrderConfirmFunction(Logger log, OrderService orderService) {
+        this.log = log;
+        this.orderService = orderService;
+    }
 
     @Funq
-    public Order confirm(Order order) {
+    public void confirm(Order order) {
         log.infof("Accepted order: %s", order);
-        Order o = orderService.doConfirm(order);
-        if (o != null) {
-            sender.send(o);
-        }
-        return o;
+        orderService.doConfirm(order);
     }
 
 }
