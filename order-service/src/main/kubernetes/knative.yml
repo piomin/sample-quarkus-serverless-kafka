@@ -7,7 +7,7 @@ spec:
   bootstrapServers:
     - my-cluster-kafka-bootstrap.kafka:9092
   topic: order-events
-  numPartitions: 5
+  numPartitions: 1
 ---
 apiVersion: sources.knative.dev/v1beta1
 kind: KafkaSource
