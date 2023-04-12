@@ -1,0 +1,21 @@
+specVersion: 0.25.0
+name: order-service
+namespace: demo-eventing
+runtime: quarkus
+registry: image-registry.openshift-image-registry.svc:5000/demo-eventing
+image: ""
+imageDigest: ""
+buildpacks: []
+builder: s2i
+volumes: []
+buildEnvs: []
+envs:
+- name: QUARKUS_PROFILE
+  value: openshift
+- name: TICK_TIMEOUT
+  value: "60000"
+annotations: {}
+options: {}
+labels: []
+healthEndpoints: {}
+created: 2023-04-12T22:45:06.897492+02:00
