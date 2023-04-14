@@ -1,0 +1,17 @@
+specVersion: 0.25.0
+name: stock-service
+namespace: ""
+runtime: quarkus
+registry: quay.io/pminkows
+image: quay.io/pminkows/stock-service:1.1
+imageDigest: sha256:36d5551791af62ecf8527d8cf3d521b394dd688db302022a60c33374402b277f
+buildpacks: []
+builder: s2i
+volumes: []
+buildEnvs: []
+envs: []
+annotations: {}
+options: {}
+labels: []
+healthEndpoints: {}
+created: 2023-04-13T15:47:52.27736+02:00

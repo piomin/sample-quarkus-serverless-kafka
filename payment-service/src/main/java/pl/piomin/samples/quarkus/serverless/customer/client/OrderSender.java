@@ -14,7 +14,7 @@ import javax.ws.rs.Path;
 public interface OrderSender {
 
     @POST
-    @Path("/stock-sink")
+    @Path("/payment-sink")
     void send(Order order);
 
 }

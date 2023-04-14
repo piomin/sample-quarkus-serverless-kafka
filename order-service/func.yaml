@@ -1,21 +1,30 @@
-specVersion: 0.25.0
+specVersion: 0.35.0
 name: order-service
-namespace: demo-eventing
 runtime: quarkus
-registry: image-registry.openshift-image-registry.svc:5000/demo-eventing
-image: ""
-imageDigest: ""
-buildpacks: []
-builder: s2i
-volumes: []
-buildEnvs: []
-envs:
-- name: QUARKUS_PROFILE
-  value: openshift
-- name: TICK_TIMEOUT
-  value: "60000"
-annotations: {}
-options: {}
-labels: []
-healthEndpoints: {}
+registry: quay.io
+image: quay.io/pminkows/order-service:1.1
+imageDigest: sha256:ad33623d46835f84dcc30a0d35bd107c6940c83eddce6ff7f7288f86fdb52395
 created: 2023-04-12T22:45:06.897492+02:00
+build:
+  buildpacks: []
+  builder: s2i
+  buildEnvs: []
+run:
+  volumes: []
+  envs:
+  - name: QUARKUS_PROFILE
+    value: openshift
+  - name: TICK_TIMEOUT
+    value: "60000"
+deploy:
+  namespace: demo-eventing
+  remote: false
+  annotations: {}
+  options:
+    scale:
+      metric: rps
+      target: 50
+  labels: []
+  healthEndpoints:
+    liveness: /q/health/live
+    readiness: /q/health/ready
