@@ -5,10 +5,10 @@ import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.util.Random;
 
 @ApplicationScoped

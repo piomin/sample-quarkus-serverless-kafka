@@ -1,6 +1,10 @@
 package pl.piomin.samples.quarkus.serverless.order;
 
 import io.quarkus.runtime.StartupEvent;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
@@ -8,11 +12,6 @@ import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
 import pl.piomin.samples.quarkus.serverless.order.service.OrderPublisher;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class OrderApplication {

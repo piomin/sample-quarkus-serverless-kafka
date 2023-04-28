@@ -9,9 +9,9 @@ import pl.piomin.samples.quarkus.serverless.customer.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.customer.model.Customer;
 import pl.piomin.samples.quarkus.serverless.customer.repository.CustomerRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.persistence.LockModeType;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class OrderReserveService {

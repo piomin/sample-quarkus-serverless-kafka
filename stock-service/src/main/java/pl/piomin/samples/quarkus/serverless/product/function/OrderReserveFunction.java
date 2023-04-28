@@ -4,7 +4,6 @@ import io.quarkus.funqy.Funq;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.product.message.Order;
 import pl.piomin.samples.quarkus.serverless.product.message.OrderStatus;
-import pl.piomin.samples.quarkus.serverless.product.model.Product;
 import pl.piomin.samples.quarkus.serverless.product.service.OrderConfirmService;
 import pl.piomin.samples.quarkus.serverless.product.service.OrderReserveService;
 
