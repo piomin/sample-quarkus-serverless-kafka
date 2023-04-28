@@ -1,16 +1,14 @@
 package pl.piomin.samples.quarkus.serverless.order.service;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.LockModeType;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.order.repository.OrderRepository;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.LockModeType;
-import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class OrderService {

@@ -8,9 +8,9 @@ import pl.piomin.samples.quarkus.serverless.product.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.product.model.Product;
 import pl.piomin.samples.quarkus.serverless.product.repository.ProductRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class OrderReserveService {

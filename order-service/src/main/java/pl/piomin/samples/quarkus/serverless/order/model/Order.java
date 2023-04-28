@@ -1,6 +1,6 @@
 package pl.piomin.samples.quarkus.serverless.order.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "orders")

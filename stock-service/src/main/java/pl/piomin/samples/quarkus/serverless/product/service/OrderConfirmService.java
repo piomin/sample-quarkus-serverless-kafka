@@ -6,8 +6,8 @@ import pl.piomin.samples.quarkus.serverless.product.message.OrderStatus;
 import pl.piomin.samples.quarkus.serverless.product.model.Product;
 import pl.piomin.samples.quarkus.serverless.product.repository.ProductRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class OrderConfirmService {
