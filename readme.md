@@ -9,13 +9,21 @@
 
 ## Getting Started
 Currently, you may find here some examples of microservices implementation using different projects from Quarkus. All the examples are divided into the branches and described in a separated articles on my blog. Here's a full list of available examples:
-1. Using Knative Serving and Eventing components with Quarkus and Kafka to build event-driven microservices architecture in declarative way. The example is available in the branch [master](https://github.com/piomin/sample-quarkus-serverless-kafka/tree/master). A detailed guide may be find in the following article: [Knative Eventing with Kafka and Quarkus](https://piotrminkowski.com/2021/03/31/knative-eventing-with-kafka-and-quarkus/)
+1. Using Knative Serving and Eventing components with Quarkus and Kafka to build event-driven microservices architecture in declarative way. The example is available in the branch [master](https://github.com/piomin/sample-quarkus-serverless-kafka/tree/master). A detailed guide may be found in the following article: [Knative Eventing with Kafka and Quarkus](https://piotrminkowski.com/2021/03/31/knative-eventing-with-kafka-and-quarkus/)
+2. Update to the Knative Eventing focusing on `KafkaSink`, OpenShift and REST client interaction with event-mesh. A detailed guide may be found in the following article: [Serverless on OpenShift with Knative, Quarkus and Kafka](https://piotrminkowski.com/2023/04/18/serverless-on-openshift-with-knative-quarkus-and-kafka/)
 
 ## Usage
 
 ## Architecture
 
+## Run with Quarkus
+
+1. Login to OpenShift Dashboard and create the `demo-eventing` project (`oc new-project demo-eventing`)
+2. Create the Knative `Broker` with the `kn broker create default`
+3. Build the and deploy to OpenShift by activating the already defined `openshift` Maven profile: `mvn clean package -Popenshift`
+
 ## Test on OpenShift
+!!! For those who don't want to deploy using Quarkus Kubernetes extension and Maven.
 
 1. Login to OpenShift Dashboard https://console-openshift-console.apps.qyt1tahi.eastus.aroapp.io/
 2. Create your project
@@ -42,7 +50,7 @@ spec:
 `stock-service` -> quay.io/pminkows/stock-service. Set env `KAFKA_TOPIC` \
 `payment-service` -> quay.io/pminkows/payment-service. Set env `KAFKA_TOPIC`
 
-5. Create `KafkaBinding` for each application to inject Kafka address
+5. Create `KafkaBinding` for each application to inject Kafka address (only older versions of Kafka)
 
 For `stock-service`:
 ```yaml

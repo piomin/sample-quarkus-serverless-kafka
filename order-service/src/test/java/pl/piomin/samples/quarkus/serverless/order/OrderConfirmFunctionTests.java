@@ -26,27 +26,28 @@ public class OrderConfirmFunctionTests {
 
     @Test
     void confirm() {
+
         // first response -> IN_PROGRESS
-        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
                 .statusCode(204);
 
         // second response -> CONFIRMED
-        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
                 .statusCode(204);
 
-        Order o = repository.findById(1L);
+        Order o = repository.findById(2L);
         assertEquals(OrderStatus.CONFIRMED, o.getStatus());
     }
 
     @Test
     void reject() {
-        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.REJECTED)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(3L, OrderStatus.REJECTED)).post("/confirm")
                 .then()
                 .statusCode(204);
 
-        Order o = repository.findById(2L);
+        Order o = repository.findById(3L);
         assertEquals(OrderStatus.REJECTED, o.getStatus());
         assertEquals("test", o.getRejectedService());
     }
@@ -59,4 +60,5 @@ public class OrderConfirmFunctionTests {
         o.setAmount(100);
         return o;
     }
+
 }
