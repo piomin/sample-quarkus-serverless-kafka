@@ -26,6 +26,8 @@ public class OrderConfirmFunctionTests {
 
     @Test
     void confirm() {
+        waitForData();
+
         // first response -> IN_PROGRESS
         given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
@@ -58,5 +60,17 @@ public class OrderConfirmFunctionTests {
         o.setStatus(status);
         o.setAmount(100);
         return o;
+    }
+
+    private void waitForData() {
+        for (int i = 0; i < 10; i++) {
+            if (repository.findById(1L) != null)
+                break;
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

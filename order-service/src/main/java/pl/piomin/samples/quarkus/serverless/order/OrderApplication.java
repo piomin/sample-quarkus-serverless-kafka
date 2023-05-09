@@ -32,6 +32,7 @@ public class OrderApplication {
             Order o = new Order(null, i%1000+1, i%100+1, 100, 1, OrderStatus.NEW);
             repository.persist(o);
         }
+        log.info("Test order added.");
     }
 
     @Inject
