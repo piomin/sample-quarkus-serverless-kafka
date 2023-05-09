@@ -26,29 +26,28 @@ public class OrderConfirmFunctionTests {
 
     @Test
     void confirm() {
-        waitForData();
 
         // first response -> IN_PROGRESS
-        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
                 .statusCode(204);
 
         // second response -> CONFIRMED
-        given().contentType("application/json").body(createTestOrder(1L, OrderStatus.IN_PROGRESS)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.IN_PROGRESS)).post("/confirm")
                 .then()
                 .statusCode(204);
 
-        Order o = repository.findById(1L);
+        Order o = repository.findById(2L);
         assertEquals(OrderStatus.CONFIRMED, o.getStatus());
     }
 
     @Test
     void reject() {
-        given().contentType("application/json").body(createTestOrder(2L, OrderStatus.REJECTED)).post("/confirm")
+        given().contentType("application/json").body(createTestOrder(3L, OrderStatus.REJECTED)).post("/confirm")
                 .then()
                 .statusCode(204);
 
-        Order o = repository.findById(2L);
+        Order o = repository.findById(3L);
         assertEquals(OrderStatus.REJECTED, o.getStatus());
         assertEquals("test", o.getRejectedService());
     }
@@ -62,15 +61,4 @@ public class OrderConfirmFunctionTests {
         return o;
     }
 
-    private void waitForData() {
-        for (int i = 0; i < 10; i++) {
-            if (repository.findById(1L) != null)
-                break;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 }
