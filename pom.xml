@@ -24,7 +24,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.version>3.1.0.Final</quarkus.platform.version>
         <quarkus.plugin.version>3.1.0.Final</quarkus.plugin.version>
-        <surefire-plugin.version>3.1.0</surefire-plugin.version>
+        <surefire-plugin.version>3.1.2</surefire-plugin.version>
         <sonar.projectKey>piomin_sample-quarkus-serverless-kafka</sonar.projectKey>
         <sonar.organization>piomin</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
