@@ -1,4 +1,4 @@
-version: 2.1
+version: '2.1'
 
 jobs:
   analyze:
@@ -9,23 +9,28 @@ jobs:
       - run:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar -DskipTests
-
-executors:
-  jdk:
-    docker:
-      - image: 'cimg/openjdk:21.0.2'
+  test:
+    executor: machine_executor_amd64
+    steps:
+      - checkout
+      - run:
+          name: Maven Tests
+          command: mvn test
 
 orbs:
   maven: circleci/maven@1.4.1
-  tcc: atomicjar/testcontainers-cloud-orb@0.1.0
+
+executors:
+  machine_executor_amd64:
+    machine:
+      image: ubuntu-2204:2023.10.1
+    environment:
+      architecture: "amd64"
+      platform: "linux/amd64"
 
 workflows:
   maven_test:
     jobs:
-      - maven/test:
-          executor: jdk
-          context: Testcontainers
-          pre-steps:
-            - tcc/setup
+      - test
       - analyze:
           context: SonarCloud
