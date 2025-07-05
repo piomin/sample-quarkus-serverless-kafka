@@ -27,7 +27,7 @@ public class OrderApplication {
     }
 
     @Transactional
-    void onStart(@Observes StartupEvent ev) {
+    public void onStart(@Observes StartupEvent ev) {
         for (int i = 0; i < 10; i++) {
             Order o = new Order(null, i%1000+1, i%100+1, 100, 1, OrderStatus.NEW);
             repository.persist(o);
@@ -41,7 +41,7 @@ public class OrderApplication {
     @ConfigProperty(name = "app.orders.timeout", defaultValue = "10000")
     long timeout;
 
-    void execute(@Observes StartupEvent ev) {
+    public void execute(@Observes StartupEvent ev) {
         executor.runAsync(() -> {
             while (true) {
                publisher.generate();

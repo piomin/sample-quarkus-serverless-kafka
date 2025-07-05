@@ -1,9 +1,11 @@
 package pl.piomin.samples.quarkus.serverless.order;
 
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import pl.piomin.samples.quarkus.serverless.order.client.OrderSender;
 import pl.piomin.samples.quarkus.serverless.order.model.Order;
 import pl.piomin.samples.quarkus.serverless.order.model.OrderStatus;
@@ -13,6 +15,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderConfirmFunctionTests {
 
     private OrderRepository repository;
@@ -25,6 +28,7 @@ public class OrderConfirmFunctionTests {
     }
 
     @Test
+    @org.junit.jupiter.api.Order(1)
     void confirm() {
 
         // first response -> IN_PROGRESS
@@ -42,6 +46,7 @@ public class OrderConfirmFunctionTests {
     }
 
     @Test
+    @org.junit.jupiter.api.Order(2)
     void reject() {
         given().contentType("application/json").body(createTestOrder(3L, OrderStatus.REJECTED)).post("/confirm")
                 .then()
